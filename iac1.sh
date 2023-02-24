@@ -1,5 +1,17 @@
 #!/bin/bash
 
+function criarUsuario(){
+    #Criar usuários em um grupo padrão. O grupo dever ser o primeiro argumento.
+    #Função deve receber no mínimo 2 argumentos: Grupo e nome do usuário.
+    
+    [ $# -lt 2 ] && exit -1
+    
+    nomes=($@)
+    for nome in ${nomes[@]:1};do
+        useradd ${nome} -m -s /bin/bash -p $(openssl passwd -crypt Senha123) -G $1
+    done
+}
+
 echo "Criando diretórios..."
 
 mkdir /publico
@@ -15,17 +27,14 @@ groupadd GRP_SEC
 
 echo "Criando usuários..."
 
-useradd carlos -m -s /bin/bash -p $(openssl passwd -crypt Senha123) -G GRP_ADM
-useradd maria -m -s /bin/bash -p $(openssl passwd -crypt Senha123) -G GRP_ADM
-useradd joao -m -s /bin/bash -p $(openssl passwd -crypt Senha123) -G GRP_ADM
+usuarios_adm=("GRP_ADM" "carlos" "maria" "joao")
+criarUsuario ${usuarios_adm[@]}
 
-useradd debora -m -s /bin/bash -p $(openssl passwd -crypt Senha123) -G GRP_VEN
-useradd sebastiana -m -s /bin/bash -p $(openssl passwd -crypt Senha123) -G GRP_VEN
-useradd roberto -m -s /bin/bash -p $(openssl passwd -crypt Senha123) -G GRP_VEN
+usuarios_ven=("GRP_VEN" "debora" "sebastiana" "roberto")
+criarUsuario ${usuarios_ven[@]}
 
-useradd josefina -m -s /bin/bash -p $(openssl passwd -crypt Senha123) -G GRP_SEC
-useradd amanda -m -s /bin/bash -p $(openssl passwd -crypt Senha123) -G GRP_SEC
-useradd rogerio -m -s /bin/bash -p $(openssl passwd -crypt Senha123) -G GRP_SEC
+usuarios_sec=("GRP_SEC" "josefina" "amanda" "rogerio")
+criarUsuario ${usuarios_sec[@]}
 
 echo "Especificando permissões dos diretórios...."
 
@@ -39,4 +48,3 @@ chmod 770 /sec
 chmod 777 /publico
 
 echo "Fim....."
-

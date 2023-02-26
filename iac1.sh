@@ -8,7 +8,7 @@ function criarUsuario(){
     
     nomes=($@)
     for nome in ${nomes[@]:1};do
-        useradd ${nome} -m -s /bin/bash -p $(openssl passwd -crypt Senha123) -G $1
+        useradd ${nome} -m -s /bin/bash -p $(openssl passwd -6 Senha123) -G $1
     done
 }
 
